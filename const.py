@@ -1,1 +1,2 @@
 RETURN_ALL = "*"
+AND_OPERATOR = "AND"
