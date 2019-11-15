@@ -4,6 +4,8 @@ from DataModel.DataLoaders.DocumentLoader import DocumentLoader
 
 class DataLoader:
     def __init__(self, **args):
+        self.tagging_data = []
+        self.ontology_data = dict()
         if args.get('url_config'):
             self.data_getter = ApiConfig(args.get('url_config'))
         if args.get('file_config'):
@@ -18,3 +20,7 @@ class DataLoader:
 
     def get_ontology_data(self):
         return self.ontology_data
+
+
+if __name__ == '__main__':
+    print("test")
