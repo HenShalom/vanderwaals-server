@@ -133,3 +133,4 @@ dmypy.json
 
 #other
 config/
+result.json
