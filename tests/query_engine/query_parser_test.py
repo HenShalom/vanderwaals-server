@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from QueryEngine.query_parser import extract_ontology_field, extract_ontology_keys
+from QueryEngine.query_parser import *
 
 
 class TestQueryParse(unittest.TestCase):
@@ -37,3 +37,22 @@ class TestQueryParse(unittest.TestCase):
                 "Age": True
             }
             self.assertDictEqual(basic_query_keys, extracted_queries)
+
+    def test__generate_query_item(self):
+        query_item_dict = {
+            "key": "ID",
+            "value": "25"
+        }
+        res = generate_query_item(query_item_dict)
+        self.assertTrue(type(res) == QueryItem)
+        self.assertTrue(res.key == "ID")
+        self.assertTrue(res.value == "25")
+
+    def test__generate_basic_query(self):
+        with open("Docs/basicQueryExample.json") as query_json:
+            query_dict = json.load(query_json)
+            basic_query = generate_basic_query(query_dict)
+            print(basic_query.query_items)
+            self.assertTrue(type(basic_query) == BasicQuery)
+            self.assertTrue(len(basic_query.query_items) == 2)
+            self.assertTrue(type(basic_query.query_items[0]) == BasicQuery)

@@ -1,4 +1,5 @@
 from functools import reduce
+from Queries import QueryItem, BasicQuery
 
 
 def extract_ontology_field(query: dict):
@@ -10,3 +11,17 @@ def extract_ontology_field(query: dict):
 def extract_ontology_keys(query):
     query_fields = extract_ontology_field(query)
     return {field.get("key"): field.get("optional", False) for field in query_fields}
+
+
+def generate_query_item(query_item_dict):
+    return QueryItem(
+        query_item_dict.get("key"),
+        query_item_dict.get("value"),
+        query_item_dict.get("advance")
+    )
+
+
+def generate_basic_query(query_dict):
+    if query_dict.get("fields"):
+        return BasicQuery(query_items=[generate_basic_query(query) for query in query_dict.get("fields")])
+    return generate_query_item(query_dict)
