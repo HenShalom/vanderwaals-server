@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from const import CONNECOR_DILIMITER
+from const import CONNECTOR_DELIMITER
 from Connector import connector_dict
 from Utiles import get_from_dict
 
@@ -8,7 +8,7 @@ from Connector.BaseConnector import BaseConnector
 
 
 def get_connector_class(schema_connector: str):
-    location = schema_connector.split(CONNECOR_DILIMITER)
+    location = schema_connector.split(CONNECTOR_DELIMITER)
     return get_from_dict(connector_dict, location)
 
 
