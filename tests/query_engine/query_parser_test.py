@@ -1,6 +1,6 @@
 import unittest
 import json
-
+from tests.query_engine.tagging_parser_test import basic_group
 from QueryEngine.query_parser import *
 
 
@@ -43,15 +43,15 @@ class TestQueryParse(unittest.TestCase):
             "key": "ID",
             "value": "25"
         }
-        res = generate_query_item(query_item_dict)
+        res = generate_query_item(query_item_dict, basic_group)
         self.assertTrue(type(res) == QueryItem)
-        self.assertTrue(res.key == "ID")
+        self.assertTrue(res.key == "id")
         self.assertTrue(res.value == "25")
 
     def test__generate_basic_query(self):
         with open("Docs/basicQueryExample.json") as query_json:
             query_dict = json.load(query_json)
-            basic_query = generate_basic_query(query_dict)
+            basic_query = generate_basic_query(query_dict, basic_group)
             print(basic_query.query_items)
             self.assertTrue(type(basic_query) == BasicQuery)
             self.assertTrue(len(basic_query.query_items) == 2)
