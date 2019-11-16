@@ -3,7 +3,7 @@
     "groupBy": [
       "schema",
       "collection",
-      "dataset"
+      "table"
     ]
   },
   "operator": "AND",
