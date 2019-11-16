@@ -1,6 +1,6 @@
 import unittest
 
-from QueryEngine.tagging_parser import *
+from QueryEngine.Parser.tagging_parser import *
 from QueryEngine.TaggingGroup import TaggingGroup
 
 tagging_items = [
