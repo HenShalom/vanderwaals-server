@@ -2,7 +2,7 @@ import json
 import unittest
 
 from QueryEngine.Parser.query_parser import *
-from tests.query_engine.tagging_parser_test import basic_group
+from tests.query_engine.parser.tagging_parser_test import basic_group
 
 
 class TestQueryParse(unittest.TestCase):
