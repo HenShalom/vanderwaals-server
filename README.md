@@ -1,4 +1,4 @@
-# vanderwaals-server
+# Vanderwaals-server
 
-vanderwaals is a python flask server that let you federated queries over a coplule of sources and diffrent DB
-useing ontolgy and tagging configuration 
+Vanderwaals is a python flask server that lets you federated queries over a couple of
+sources and different DB using ontology and tagging configuration.
