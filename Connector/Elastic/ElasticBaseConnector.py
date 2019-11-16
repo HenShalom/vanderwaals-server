@@ -1,13 +1,15 @@
 from elasticsearch import Elasticsearch
 from typing import Union
+
+from Connector.BaseConnector import BaseConnector
 from const import RETURN_ALL
 from Queries.QueryItem import QueryItem
 from Queries.BasicQuery import BasicQuery
 
 
-class ElasticBaseConnector:
+class ElasticBaseConnector(BaseConnector):
     def __init__(self, schema):
-        self.schema = schema
+        BaseConnector.__init__(self, schema)
         self.es = Elasticsearch(self.schema.get("connection").get("hosts"),
                                 **self.schema.get("connection").get("elasticOption", {}))
 
