@@ -10,3 +10,8 @@ class BasicQuery:
         self.table_name = table_name
         self.collection_name = collection_name
         self.return_list = return_list
+
+    def __add__(self, basic_query):
+        query_items = basic_query.query_items + self.query_items
+        return BasicQuery(query_items, table_name=self.table_name, collection_name=self.collection_name,
+                          return_list=self.return_list, operator=self.operator)

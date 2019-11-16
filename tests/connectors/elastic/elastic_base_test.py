@@ -6,7 +6,7 @@ from tests.connectors.elastic.elastic_common import elastic_template_query, empt
 
 
 class TestElasticBaseConnector(unittest.TestCase):
-    def test__generate_query_item__query_item(self):
+    def generate_location_query_item(self):
         elastic_index_connector = ElasticBaseConnector(empty_schema)
         item = QueryItem("test", "value")
         generate_query = elastic_index_connector.generate_query_item(item)
