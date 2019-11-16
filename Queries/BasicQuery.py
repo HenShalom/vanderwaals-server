@@ -6,7 +6,7 @@ class BasicQuery:
                  operator=AND_OPERATOR,
                  return_list=RETURN_ALL):
         self.operator = operator
-        self.query_items = query_items
+        self.query_items = query_items if isinstance(query_items, list) else [query_items]
         self.table_name = table_name
         self.collection_name = collection_name
         self.return_list = return_list
