@@ -20,6 +20,9 @@ tagging_items = [
     }
 ]
 
+basic_group = TaggingGroup(tagging_items)
+basic_group.update_keys_dict(get_groups_keys(basic_group))
+
 
 class TestTaggingParser(unittest.TestCase):
     def test__get_tagging_settings(self):
@@ -49,28 +52,22 @@ class TestTaggingParser(unittest.TestCase):
         self.assertDictEqual(keys_set, {"ID": "id", "FullName": "name"})
 
     def test__is_keys_in_group__should_return_false(self):
-        group = TaggingGroup(tagging_items)
-        group.update_keys_dict(get_groups_keys(group))
         keys = {
             "ID": False,
             "Stuff": False  # this key is not optional and not in the group
         }
-        self.assertTrue(not is_keys_in_group(keys, group))
+        self.assertTrue(not is_keys_in_group(keys, basic_group))
 
     def test__is_keys_in_group__should_return_true(self):
-        group = TaggingGroup(tagging_items)
-        group.update_keys_dict(get_groups_keys(group))
         keys = {
             "ID": False,
             "Stuff": True  # this key is not in the group but optional
         }
-        self.assertTrue(is_keys_in_group(keys, group))
+        self.assertTrue(is_keys_in_group(keys, basic_group))
 
     def test__is_keys_in_group__all_true(self):
-        group = TaggingGroup(tagging_items)
-        group.update_keys_dict(get_groups_keys(group))
         keys = {
             "ID": False,
             "FullName": False
         }
-        self.assertTrue(is_keys_in_group(keys, group))
+        self.assertTrue(is_keys_in_group(keys, basic_group))
