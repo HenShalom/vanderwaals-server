@@ -10,32 +10,22 @@ class ElasticMultiIndexConnector(ElasticBaseConnector):
     def __init__(self, schema):
         ElasticBaseConnector.__init__(self, schema)
 
-    def generate_location_query_item(self, basic_query):
-        location_query = []
-        if self.schema.get("table_key"):
-            table_query = QueryItem(self.schema.get("table_key"), basic_query.table_name)
-            location_query.append(table_query)
-        if self.schema.get("collection_key"):
-            collection_query = QueryItem(self.schema.get("collection_key"), basic_query.collection_name)
-            location_query.append(collection_query)
-        return BasicQuery(location_query)
-
-    def generate_basic_query_location(self) -> dict:
-        if self.schema.get("type"):
+    @staticmethod
+    def generate_basic_query_location(basic_query: BasicQuery) -> dict:
+        if basic_query.collection_name and basic_query.table_name:
             return {
-                "index": self.schema.get("index"),
-                "type": self.schema.get("type")
+                "index": basic_query.collection_name,
+                "type": basic_query.collection_name
             }
         return {
-            "index": self.schema.get("index"),
+            "index": basic_query.table_name,
         }
 
     def get_query_body(self, advance_query: AdvanceQuery) -> List[dict]:
         body = []
         for basic_query in advance_query.basic_queries:
-            location_query = self.generate_location_query_item(basic_query)
-            body.append(self.generate_basic_query_location())
-            body.append(self.generate_basic_query(basic_query + location_query))
+            body.append(self.generate_basic_query_location(basic_query))
+            body.append(self.generate_basic_query(basic_query))
         return body
 
     def query_data(self, advance_query: AdvanceQuery):
@@ -43,3 +33,18 @@ class ElasticMultiIndexConnector(ElasticBaseConnector):
         result_hits = map(self.extract_row, elastic_response.get("responses", []))
         all_results = reduce(lambda prev, value: prev + value, result_hits)
         return map(lambda doc: doc["_source"], all_results)
+
+
+if __name__ == '__main__':
+    empty_schema = {
+        "connection": {
+            "hosts": ["http://localhost:9200"],
+            "elasticOption": {
+                "http_auth": ("elastic", "changeme")
+            }
+        }
+    }
+    elastic_index_connector = ElasticMultiIndexConnector(empty_schema)
+    query_items = [QueryItem("id", "24")]
+    basic_queries = BasicQuery(query_items, table_name="spotify-data")
+    advance_query = AdvanceQuery(basic_queries)
