@@ -1,8 +1,8 @@
 import unittest
-from tests.connector.elastic_common import elastic_template_query, empty_schema
 from Connector.Elastic.ElasticBaseConnector import ElasticBaseConnector
 from Queries.BasicQuery import BasicQuery
 from Queries.QueryItem import QueryItem
+from tests.connectors.elastic.elastic_common import elastic_template_query, empty_schema
 
 
 class TestElasticBaseConnector(unittest.TestCase):
@@ -10,14 +10,14 @@ class TestElasticBaseConnector(unittest.TestCase):
         elastic_index_connector = ElasticBaseConnector(empty_schema)
         item = QueryItem("test", "value")
         generate_query = elastic_index_connector.generate_query_item(item)
-        self.assertEquals(generate_query, "(test=value)")
+        self.assertEqual(generate_query, "(test=value)")
 
     def test__generate_query_item__basic_query(self):
         elastic_index_connector = ElasticBaseConnector(empty_schema)
         item = QueryItem("test", "value")
         basic_query = BasicQuery([item])
         generate_query = elastic_index_connector.generate_query_item(basic_query)
-        self.assertEquals(generate_query, "(test=value)")
+        self.assertEqual(generate_query, "(test=value)")
 
     def test__generate_basic_query__one_query(self):
         elastic_index_connector = ElasticBaseConnector(empty_schema)
@@ -47,20 +47,3 @@ class TestElasticBaseConnector(unittest.TestCase):
         result = elastic_template_query
         result["query"]["query_string"]["query"] = "((test=value) AND (test_two=test_two))"
         self.assertDictEqual(generate_query, result)
-
-    def test__generate_basic_query_location__location(self):
-        elastic_index_connector = ElasticBaseConnector(empty_schema)
-        basic_query = BasicQuery([], table_name="test", collection_name="test")
-        location_query = elastic_index_connector.generate_basic_query_location(basic_query)
-        self.assertDictEqual(location_query, {
-            "index": "test",
-            "type": "test"
-        })
-
-    def test__generate_basic_query_location__basic_location(self):
-        elastic_index_connector = ElasticBaseConnector(empty_schema)
-        basic_query = BasicQuery([], table_name="test")
-        location_query = elastic_index_connector.generate_basic_query_location(basic_query)
-        self.assertDictEqual(location_query, {
-            "index": "test",
-        })

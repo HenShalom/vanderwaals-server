@@ -1,9 +1,9 @@
 import unittest
-from tests.connector.elastic_common import elastic_template_query, empty_schema
 from Connector.Elastic.ElasticSingleIndexConnector import ElasticSingleIndexConnector
 from Queries.AdvanceQuery import AdvanceQuery
 from Queries.BasicQuery import BasicQuery
 from Queries.QueryItem import QueryItem
+from tests.connectors.elastic.elastic_common import elastic_template_query, empty_schema
 
 
 class TestElasticSingleIndex(unittest.TestCase):
@@ -21,6 +21,23 @@ class TestElasticSingleIndex(unittest.TestCase):
             "index": "test",
         }
         self.assertListEqual(generate_query, [location, data_query])
+
+    def test__generate_basic_query_location__location(self):
+        elastic_index_connector = ElasticSingleIndexConnector(empty_schema)
+        basic_query = BasicQuery([], table_name="test", collection_name="test")
+        location_query = elastic_index_connector.generate_basic_query_location(basic_query)
+        self.assertDictEqual(location_query, {
+            "index": "test",
+            "type": "test"
+        })
+
+    def test__generate_basic_query_location__basic_location(self):
+        elastic_index_connector = ElasticSingleIndexConnector(empty_schema)
+        basic_query = BasicQuery([], table_name="test")
+        location_query = elastic_index_connector.generate_basic_query_location(basic_query)
+        self.assertDictEqual(location_query, {
+            "index": "test",
+        })
 
 
 if __name__ == '__main__':

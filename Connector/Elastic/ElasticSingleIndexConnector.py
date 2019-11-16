@@ -1,5 +1,5 @@
 from functools import reduce
-from typing import Union, List
+from typing import List
 from Connector.Elastic.ElasticBaseConnector import ElasticBaseConnector
 from Queries.QueryItem import QueryItem
 from Queries.AdvanceQuery import AdvanceQuery
@@ -9,6 +9,17 @@ from Queries.BasicQuery import BasicQuery
 class ElasticSingleIndexConnector(ElasticBaseConnector):
     def __init__(self, schema):
         ElasticBaseConnector.__init__(self, schema)
+
+    @staticmethod
+    def generate_basic_query_location(basic_query: BasicQuery) -> dict:
+        if basic_query.collection_name and basic_query.table_name:
+            return {
+                "index": basic_query.collection_name,
+                "type": basic_query.collection_name
+            }
+        return {
+            "index": basic_query.table_name,
+        }
 
     def get_query_body(self, advance_query: AdvanceQuery) -> List[dict]:
         body = []
@@ -33,7 +44,6 @@ if __name__ == '__main__':
             }
         }
     }
-
     elastic_index_connector = ElasticSingleIndexConnector(empty_schema)
     query_items = [QueryItem("id", "24")]
     basic_queries = BasicQuery(query_items, table_name="spotify-data")

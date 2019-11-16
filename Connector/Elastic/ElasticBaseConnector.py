@@ -11,17 +11,6 @@ class ElasticBaseConnector:
         self.es = Elasticsearch(self.schema.get("connection").get("hosts"),
                                 **self.schema.get("connection").get("elasticOption", {}))
 
-    @staticmethod
-    def generate_basic_query_location(basic_query: BasicQuery) -> dict:
-        if basic_query.collection_name and basic_query.table_name:
-            return {
-                "index": basic_query.collection_name,
-                "type": basic_query.collection_name
-            }
-        return {
-            "index": basic_query.table_name,
-        }
-
     def generate_query_item(self, query_item: Union[BasicQuery, QueryItem]):
         if isinstance(query_item, QueryItem):
             return "({}={})".format(query_item.key, query_item.value)
