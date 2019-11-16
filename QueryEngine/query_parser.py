@@ -1,5 +1,6 @@
 from functools import reduce
 from Queries import QueryItem, BasicQuery
+from const import AND_OPERATOR
 
 
 def extract_ontology_field(query: dict):
@@ -23,5 +24,6 @@ def generate_query_item(query_item_dict):
 
 def generate_basic_query(query_dict):
     if query_dict.get("fields"):
-        return BasicQuery(query_items=[generate_basic_query(query) for query in query_dict.get("fields")])
+        return BasicQuery(query_items=[generate_basic_query(query) for query in query_dict.get("fields")],
+                          operator=query_dict.get("operator", AND_OPERATOR))
     return generate_query_item(query_dict)
