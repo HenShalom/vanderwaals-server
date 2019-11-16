@@ -4,6 +4,6 @@ from DataModel.DataLoaders.DocumentLoader import DocumentLoader
 
 def init_data_getter(config):
     if config.get('url'):
-        return ApiConfig(*config)
+        return ApiConfig(**config)
     if config.get('location'):
-        return DocumentLoader(*config)
+        return DocumentLoader(**config)

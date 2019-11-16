@@ -1,4 +1,4 @@
-import requests
+import json
 
 
 class DocumentLoader:
@@ -6,4 +6,5 @@ class DocumentLoader:
         self.location = location
 
     def get_data(self):
-        raise NotImplementedError()
+        with open(self.location) as file:
+            return json.load(file)
