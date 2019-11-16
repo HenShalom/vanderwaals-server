@@ -1,4 +1,4 @@
-from QueryEngine import TaggingEngine
+from QueryEngine.TaggingEngine import TaggingEngine
 from QueryEngine.Parser.query_parser import extract_ontology_keys
 from QueryEngine.quey_builder import generate_basic_queries, create_advance_queries
 from const import DEFAULT_GROUP_BY
