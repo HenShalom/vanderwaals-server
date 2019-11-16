@@ -1,6 +1,6 @@
 class TaggingGroup:
-    def __init__(self, tagging_items, settings):
-        self.tagging_items = tagging_items
+    def __init__(self, tagging_items=None, settings=None):
+        self.tagging_items = tagging_items if tagging_items else []
         self.settings = settings
 
     def add_item(self, tagging_item):
