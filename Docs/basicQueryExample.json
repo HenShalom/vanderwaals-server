@@ -1,0 +1,31 @@
+{
+  "options": {
+    "groupBy": [
+      "schema",
+      "collection",
+      "dataset"
+    ]
+  },
+  "operator": "AND",
+  "fields": [
+    {
+      "operator": "OR",
+      "fields": [
+        {
+          "key": "ID",
+          "value": "25"
+        },
+        {
+          "key": "FullName",
+          "value": "Test",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "key": "Age",
+      "value": "24",
+      "optional": true
+    }
+  ]
+}
