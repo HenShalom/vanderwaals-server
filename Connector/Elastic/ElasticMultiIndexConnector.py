@@ -4,7 +4,7 @@ from Connector.Elastic.ElasticBaseConnector import ElasticBaseConnector
 from Queries.QueryItem import QueryItem
 from Queries.AdvanceQuery import AdvanceQuery
 from Queries.BasicQuery import BasicQuery
-
+import asyncio
 
 class ElasticMultiIndexConnector(ElasticBaseConnector):
     def __init__(self, schema):
@@ -28,8 +28,8 @@ class ElasticMultiIndexConnector(ElasticBaseConnector):
             body.append(self.generate_basic_query(basic_query))
         return body
 
-    def query_data(self, advance_query: AdvanceQuery):
-        elastic_response = self.es.msearch(body=self.get_query_body(advance_query))
+    async def query_data(self, advance_query: AdvanceQuery):
+        elastic_response =await self.es.msearch(body=self.get_query_body(advance_query))
         result_hits = map(self.extract_row, elastic_response.get("responses", []))
         all_results = reduce(lambda prev, value: prev + value, result_hits)
         return map(lambda doc: doc["_source"], all_results)

@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch
+from elasticsearch_async import AsyncElasticsearch
 from typing import Union
 
 from Connector.BaseConnector import BaseConnector
@@ -10,8 +10,8 @@ from Queries.BasicQuery import BasicQuery
 class ElasticBaseConnector(BaseConnector):
     def __init__(self, schema):
         BaseConnector.__init__(self, schema)
-        self.es = Elasticsearch(self.schema.get("connection").get("hosts"),
-                                **self.schema.get("connection").get("elasticOption", {}))
+        self.es = AsyncElasticsearch(self.schema.get("connection").get("hosts"),
+                                     **self.schema.get("connection").get("elasticOption", {}))
 
     def generate_query_item(self, query_item: Union[BasicQuery, QueryItem]):
         if isinstance(query_item, QueryItem):

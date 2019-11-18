@@ -2,6 +2,7 @@ import json
 from DataModel import SchemaLoader, TaggingDataLoader
 from Connector.initializer import initialize
 from QueryEngine import BasicEngine
+import asyncio
 
 query = {
     "options": {
@@ -15,13 +16,13 @@ query = {
         {
             "key": "ID",
             "value": "24",
-            "optional": True
+            "optional": False
         }
     ]
 }
 
 
-def main():
+async def main():
     schema_loader = SchemaLoader({"location": "./config/data/schema.json"})
     schema_loader.init_data()
     tagging_data = TaggingDataLoader({"location": "./config/data/tagging_data.json"},
@@ -29,8 +30,10 @@ def main():
     schema_dict = initialize(schema_loader.schema)
     engine = BasicEngine(schema_dict, tagging_data)
     with open("./result.json", "w") as f:
-        json.dump(engine.query(query), f)
+        json.dump(await engine.query(query), f)
 
 
 if __name__ == '__main__':
-    main()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
