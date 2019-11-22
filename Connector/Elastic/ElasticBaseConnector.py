@@ -1,9 +1,8 @@
 from elasticsearch_async import AsyncElasticsearch
-from typing import Union
 
+from Connector.Elastic.ElasticQueryParser import parse_basic_query
 from Connector.BaseConnector import BaseConnector
 from const import RETURN_ALL
-from Queries.QueryItem import QueryItem
 from Queries.BasicQuery import BasicQuery
 
 
@@ -13,24 +12,14 @@ class ElasticBaseConnector(BaseConnector):
         self.es = AsyncElasticsearch(self.schema.get("connection").get("hosts"),
                                      **self.schema.get("connection").get("elasticOption", {}))
 
-    def generate_query_item(self, query_item: Union[BasicQuery, QueryItem]):
-        if isinstance(query_item, QueryItem):
-            return "({}={})".format(query_item.key, query_item.value)
-        delimiter_spacer = " {} ".format(query_item.operator)
-        queries = delimiter_spacer.join(map(self.generate_query_item, query_item.query_items))
-        if len(query_item.query_items) == 1:
-            return "{}".format(queries)
-        return "({})".format(queries)
-
     def generate_basic_query(self, basic_query: BasicQuery) -> dict:
-        string_query = self.generate_query_item(basic_query)
+        string_query = parse_basic_query(basic_query)
         query = {
             "query": {
-                "query_string": {
-                    "query": string_query
-                }
+                "bool": string_query
             }
         }
+        print(query)
         if not basic_query.return_list == RETURN_ALL:
             query["_source"] = basic_query.return_list
         return query
