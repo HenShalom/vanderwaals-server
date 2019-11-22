@@ -1,4 +1,6 @@
 from functools import reduce
+
+from QueryEngine.utiles import filter_empty_queries
 from Queries import QueryItem, BasicQuery
 from QueryEngine import TaggingGroup
 from const import AND_OPERATOR
@@ -16,15 +18,24 @@ def extract_ontology_keys(query):
 
 
 def generate_query_item(query_item_dict: dict, group: TaggingGroup):
-    return QueryItem(
-        group.keys_dict.get(query_item_dict.get("key")),
-        query_item_dict.get("value"),
-        query_item_dict.get("advance")
-    )
+    if group.keys_dict.get(query_item_dict.get("key")):
+        return QueryItem(
+            group.keys_dict.get(query_item_dict.get("key")),
+            query_item_dict.get("value"),
+            query_item_dict.get("advance")
+        )
+    return None
+
+
+def generate_basic_query_query_items(query_dict: dict, group: TaggingGroup) -> list:
+    query_items = [generate_basic_query(query, group) for query in query_dict.get("fields")]
+    return filter_empty_queries(query_items)
 
 
 def generate_basic_query(query_dict: dict, group: TaggingGroup):
     if query_dict.get("fields"):
-        return BasicQuery(query_items=[generate_basic_query(query, group) for query in query_dict.get("fields")],
+        query_items = generate_basic_query_query_items(query_dict, group)
+        if len(query_items) == 0: return None
+        return BasicQuery(query_items=query_items,
                           operator=query_dict.get("operator", AND_OPERATOR))
     return generate_query_item(query_dict, group)

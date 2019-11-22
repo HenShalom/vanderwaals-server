@@ -7,6 +7,7 @@ from QueryEngine.Parser.query_parser import generate_basic_query
 
 def generate_basic_queries(query: dict, group: TaggingGroup):
     basic_query = generate_basic_query(query, group)
+    if not basic_query: return None
     settings = group.settings
     basic_query.return_list = list(group.keys_dict.values())
     basic_query.table_name = settings.get("table", ""),

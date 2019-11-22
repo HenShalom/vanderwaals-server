@@ -1,4 +1,6 @@
 import asyncio
+
+from QueryEngine.utiles import filter_empty_queries
 from QueryEngine.TaggingEngine import TaggingEngine
 from QueryEngine.Parser.query_parser import extract_ontology_keys
 from QueryEngine.quey_builder import generate_basic_queries, create_advance_queries
@@ -29,5 +31,6 @@ class BasicEngine:
         queries_key = extract_ontology_keys(query)
         relevant_tagging_groups = self.tagging_engine.get_relevant_tagging_groups(queries_key, group_by)
         basic_queries = [generate_basic_queries(query, group) for group in relevant_tagging_groups]
-        advance_queries = create_advance_queries(basic_queries)
+        filter_queries = filter_empty_queries(basic_queries)
+        advance_queries = create_advance_queries(filter_queries)
         return await self.execute_queries(advance_queries)
