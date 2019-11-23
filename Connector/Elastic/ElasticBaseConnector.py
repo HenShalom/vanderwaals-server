@@ -12,16 +12,15 @@ class ElasticBaseConnector(BaseConnector):
         self.es = AsyncElasticsearch(self.schema.get("connection").get("hosts"),
                                      **self.schema.get("connection").get("elasticOption", {}))
 
-    def generate_basic_query(self, basic_query: BasicQuery) -> dict:
+    def generate_basic_query(self, basic_query: BasicQuery, extra_fields=list()) -> dict:
         string_query = parse_basic_query(basic_query)
         query = {
             "query": {
                 "bool": string_query
             }
         }
-        print(query)
         if not basic_query.return_list == RETURN_ALL:
-            query["_source"] = basic_query.return_list
+            query["_source"] = basic_query.return_list + extra_fields
         return query
 
     @staticmethod

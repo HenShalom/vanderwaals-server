@@ -10,3 +10,5 @@ GROUP_DELIMITER = "~"
 DEFAULT_GROUP_BY = ["schema"]
 BDT_KEY = "bdt"
 FIELD_KEY = "field"
+TABLE_FIELD = "table"
+COLLECTION_FIELD = "collection"

@@ -1,7 +1,8 @@
 from functools import reduce
 from typing import List
 
-from const import FIXED_FIELD
+from const import FIXED_FIELD, TABLE_FIELD, COLLECTION_FIELD
+from Connector.Elastic.consts import SOURCE_KEY
 from Connector.Elastic.ElasticBaseConnector import ElasticBaseConnector
 from Queries.QueryItem import QueryItem
 from Queries.AdvanceQuery import AdvanceQuery
@@ -38,11 +39,20 @@ class ElasticSingleIndexConnector(ElasticBaseConnector):
         for basic_query in advance_query.basic_queries:
             location_query = self.generate_location_query_item(basic_query)
             body.append(self.generate_basic_query_location())
-            body.append(self.generate_basic_query(basic_query + location_query))
+            body.append(self.generate_basic_query(basic_query + location_query,
+                                                  [self.schema.get("index"), self.schema.get("type")]))
         return body
+
+    def parse_result(self, doc):
+        basic_row = doc[SOURCE_KEY]
+        if self.schema.get("table_key"):
+            basic_row[TABLE_FIELD] = doc[self.schema.get("table_key")]
+        if self.schema.get("collection_key"):
+            basic_row[COLLECTION_FIELD] = doc[self.schema.get("collection_key")]
+        return basic_row
 
     async def query_data(self, advance_query: AdvanceQuery):
         elastic_response = await self.es.msearch(body=self.get_query_body(advance_query))
         result_hits = map(self.extract_row, elastic_response.get("responses", []))
         all_results = reduce(lambda prev, value: prev + value, result_hits)
-        return map(lambda doc: doc["_source"], all_results)
+        return map(self.parse_result, all_results)
